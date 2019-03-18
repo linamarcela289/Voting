@@ -1,29 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Voting.Web.Data;
-using Voting.Web.Data.Entities;
-
-namespace Voting.Web.Controllers
+﻿namespace Voting.Web.Controllers
 {
+    using Data;
+    using Data.Entities;
+    using Helpers;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Threading.Tasks;
+
+
     public class EventsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IEventsRepository eventsRepository;
+        private readonly IUserHelper userHelper;
 
-        public EventsController(DataContext context)
+
+        public EventsController(IEventsRepository eventsRepository, IUserHelper userHelper)
         {
-            _context = context;
+            this.eventsRepository = eventsRepository;
+            this.userHelper = userHelper;
+
         }
 
         // GET: Events
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Events.ToListAsync());
+            return View(this.eventsRepository.GetAll());
         }
+
 
         // GET: Events/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -33,15 +36,15 @@ namespace Voting.Web.Controllers
                 return NotFound();
             }
 
-            var events = await _context.Events
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (events == null)
+            var product = await this.eventsRepository.GetByIdAsync(id.Value);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(events);
+            return View(product);
         }
+
 
         // GET: Events/Create
         public IActionResult Create()
@@ -54,18 +57,20 @@ namespace Voting.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Decription,StarDate,EndDate")] Events events)
+        public async Task<IActionResult> Create(Events events)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(events);
-                await _context.SaveChangesAsync();
+                // TODO: Pending to change to: this.User.Identity.Name
+                events.User = await this.userHelper.GetUserByEmailAsync("linagaleano0@gmail.com");
+                await this.eventsRepository.CreateAsync(events);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(events);
         }
 
-        // GET: Events/Edit/5
+        // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,36 +78,34 @@ namespace Voting.Web.Controllers
                 return NotFound();
             }
 
-            var events = await _context.Events.FindAsync(id);
-            if (events == null)
+            var product = await this.eventsRepository.GetByIdAsync(id.Value);
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(events);
+
+            return View(product);
         }
+
 
         // POST: Events/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Decription,StarDate,EndDate")] Events events)
+        public async Task<IActionResult> Edit(Events events)
         {
-            if (id != events.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(events);
-                    await _context.SaveChangesAsync();
+                    // TODO: Pending to change to: this.User.Identity.Name
+                    events.User = await this.userHelper.GetUserByEmailAsync("linagaleano0@gmail.com");
+                    await this.eventsRepository.UpdateAsync(events);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EventsExists(events.Id))
+                    if (!await this.eventsRepository.ExistAsync(events.Id))
                     {
                         return NotFound();
                     }
@@ -113,8 +116,10 @@ namespace Voting.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(events);
         }
+
 
         // GET: Events/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -124,8 +129,7 @@ namespace Voting.Web.Controllers
                 return NotFound();
             }
 
-            var events = await _context.Events
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var events = await this.eventsRepository.GetByIdAsync(id.Value);
             if (events == null)
             {
                 return NotFound();
@@ -134,20 +138,16 @@ namespace Voting.Web.Controllers
             return View(events);
         }
 
+
         // POST: Events/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var events = await _context.Events.FindAsync(id);
-            _context.Events.Remove(events);
-            await _context.SaveChangesAsync();
+            var product = await this.eventsRepository.GetByIdAsync(id);
+            await this.eventsRepository.DeleteAsync(product);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EventsExists(int id)
-        {
-            return _context.Events.Any(e => e.Id == id);
-        }
     }
 }

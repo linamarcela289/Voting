@@ -1,9 +1,10 @@
 ﻿namespace Voting.Web.Data
 {
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
-    using Voting.Web.Data.Entities;
+    using Entities;
 
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User>
     {
        public DbSet<Events> Events { get; set; }
 

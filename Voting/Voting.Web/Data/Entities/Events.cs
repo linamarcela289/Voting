@@ -2,7 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    public class Events
+    public class Events: IEntity
     {
         public int Id { get; set; }
 
@@ -20,5 +20,7 @@
 
         [Display(Name = "End Date")]
         public DateTime? EndDate { get; set; }
+       
+        public User User { get; set; }
     }
 }
