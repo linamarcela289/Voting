@@ -8,7 +8,7 @@
 
         [MaxLength(50, ErrorMessage = "The field {0} only can contain a maximum {1} characters")]
         [Required]
-        [Display(Name = "Full Name")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
         [MaxLength(200, ErrorMessage = "The field {0} only can contain a maximum {1} characters")]

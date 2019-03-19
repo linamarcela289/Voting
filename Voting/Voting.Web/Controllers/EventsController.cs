@@ -5,6 +5,7 @@
     using Helpers;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using System.Linq;
     using System.Threading.Tasks;
 
 
@@ -24,7 +25,7 @@
         // GET: Events
         public IActionResult Index()
         {
-            return View(this.eventsRepository.GetAll());
+            return View(this.eventsRepository.GetAll().OrderBy(e => e.Name));
         }
 
 

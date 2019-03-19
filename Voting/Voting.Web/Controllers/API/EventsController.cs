@@ -4,7 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[Controller]")]
-    public class EventsController: Controller
+    public class EventsController : Controller
     {
         private readonly IEventsRepository eventsRepository;
 
@@ -15,7 +15,7 @@
         [HttpGet]
         public IActionResult GetEvents()
         {
-            return this.Ok(this.eventsRepository.GetAll());
+            return this.Ok(this.eventsRepository.GetAllWithUsers());
         }
 
     }

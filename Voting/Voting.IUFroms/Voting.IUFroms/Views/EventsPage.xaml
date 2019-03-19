@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Voting.IUFroms.Views.EventsPage"
+              BindingContext="{Binding Main, Source={StaticResource Locator}}"
+             Title="Events">
+    <ContentPage.Content>
+        <StackLayout
+                BindingContext="{Binding Events}"
+                Padding="8">
+            <ListView 
+                HasUnevenRows="True"
+                ItemsSource="{Binding Events}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                               <!-- <Image
+                                	Grid.Column="0"
+                                	Source="{Binding ImageFullPath}"
+                                	WidthRequest="100">
+                                </Image>-->
+                                <StackLayout
+                                	Grid.Column="1"
+                                	VerticalOptions="Center">
+                                    <Label
+                                    	FontAttributes="Bold"
+                                    	FontSize="Medium"
+                                    	Text="{Binding Name}"
+                                    	TextColor="Black">
+                                    </Label>
+                                    <Label
+                                    	FontAttributes="Bold"
+                                    	FontSize="Medium"
+                                    	Text="{Binding Decription}"
+                                    	TextColor="Black">
+                                    </Label>
+                                    <Label
+                                    	FontAttributes="Bold"
+                                    	FontSize="Medium"
+                                    	Text="{Binding StarDate}"
+                                    	TextColor="Black">
+                                    </Label>
+                                    <Label
+                                    	FontAttributes="Bold"
+                                    	FontSize="Medium"
+                                    	Text="{Binding EndDate}"
+                                    	TextColor="Black">
+                                    </Label>
+                                </StackLayout>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

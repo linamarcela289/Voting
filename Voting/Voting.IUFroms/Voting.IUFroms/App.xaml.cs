@@ -1,16 +1,18 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
+﻿
 namespace Voting.IUFroms
 {
+    using Views;
+    using Voting.IUFroms.ViewModels;
+    using Xamarin.Forms;
+
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
+            MainViewModel.GetInstance().Login = new LoginViewModel();
+            MainPage = new NavigationPage(new LoginPage());
+          
         }
 
         protected override void OnStart()

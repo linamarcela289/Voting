@@ -1,10 +1,12 @@
 ﻿
 namespace Voting.Web.Data
 {
-  using Entities;
+    using Entities;
+    using System.Linq;
 
-public interface IEventsRepository : IGenericRepository<Events>
+    public interface IEventsRepository : IGenericRepository<Events>
     {
+        IQueryable GetAllWithUsers();
 
     }
 
