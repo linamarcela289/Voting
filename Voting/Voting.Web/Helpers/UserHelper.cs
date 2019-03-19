@@ -7,6 +7,7 @@ namespace Voting.Web.Helpers
     using Models;
     
 
+
     public class UserHelper : IUserHelper
     {
         private readonly UserManager<User> userManager;
@@ -26,10 +27,12 @@ namespace Voting.Web.Helpers
             return await this.userManager.CreateAsync(user, password);
         }
 
-        public Task<User> GetUserByEmailAsync(string email)
+        public async Task<User> GetUserByEmailAsync(string email)
         {
-            throw new System.NotImplementedException();
+            var user = await this.userManager.FindByEmailAsync(email);
+            return user;
         }
+
 
         public async Task<SignInResult> LoginAsync(LoginViewModel model)
         {

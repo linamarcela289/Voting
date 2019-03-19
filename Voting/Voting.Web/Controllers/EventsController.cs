@@ -62,8 +62,8 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO: Pending to change to: this.User.Identity.Name
-                events.User = await this.userHelper.GetUserByEmailAsync("linagaleano0@gmail.com");
+              
+                events.User = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await this.eventsRepository.CreateAsync(events);
                 return RedirectToAction(nameof(Index));
             }
@@ -100,8 +100,8 @@
             {
                 try
                 {
-                    // TODO: Pending to change to: this.User.Identity.Name
-                    events.User = await this.userHelper.GetUserByEmailAsync("linagaleano0@gmail.com");
+                
+                    events.User = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                     await this.eventsRepository.UpdateAsync(events);
                 }
                 catch (DbUpdateConcurrencyException)
