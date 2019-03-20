@@ -11,12 +11,14 @@ namespace Voting.Web.Data
     public class SeedDb
     {
         private readonly DataContext context;
+        private readonly IUserHelper userHelper;
         private readonly UserManager<User> userManager;
 
-        public SeedDb(DataContext context, UserManager<User> userManager)
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             this.context = context;
-            this.userManager = userManager;
+            this.userHelper = userHelper;
+          
 
         }
 
@@ -24,7 +26,11 @@ namespace Voting.Web.Data
         {
             await this.context.Database.EnsureCreatedAsync();
 
-            var user = await this.userManager.FindByEmailAsync("linagaleano0@gmail.com");
+            await this.userHelper.CheckRoleAsync("Admin");
+            await this.userHelper.CheckRoleAsync("Customer");
+
+
+            var user = await this.userHelper.GetUserByEmailAsync("linagaleano0@gmail.com");
             if (user == null)
             {
                 user = new User
@@ -40,7 +46,15 @@ namespace Voting.Web.Data
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
                 }
+                await this.userHelper.AddUserToRoleAsync(user, "Admin");
+
             }
+            var isInRole = await this.userHelper.IsUserInRoleAsync(user, "Admin");
+            if (!isInRole)
+            {
+                await this.userHelper.AddUserToRoleAsync(user, "Admin");
+            }
+
 
 
             if (!this.context.Events.Any())

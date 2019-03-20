@@ -8,9 +8,9 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-  
 
-    [Authorize]
+
+    
     public class EventsController : Controller
     {
         private readonly IEventsRepository eventsRepository;
@@ -25,6 +25,7 @@
         }
 
         // GET: Events
+
         public IActionResult Index()
         {
             return View(this.eventsRepository.GetAll().OrderBy(e => e.Name));
@@ -50,6 +51,7 @@
 
 
         // GET: Events/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -74,6 +76,7 @@
         }
 
         // GET: Products/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -125,6 +128,7 @@
 
 
         // GET: Events/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
