@@ -9,8 +9,11 @@
                 BindingContext="{Binding Events}"
                 Padding="8">
             <ListView 
+                IsPullToRefreshEnabled="True"
+	            IsRefreshing="{Binding IsRefreshing}"
                 HasUnevenRows="True"
-                ItemsSource="{Binding Events}">
+                ItemsSource="{Binding Events}"
+                RefreshCommand="{Binding RefreshCommand}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -19,9 +22,9 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                               <!-- <Image
+                              <!--  <Image
                                 	Grid.Column="0"
-                                	Source="{Binding ImageFullPath}"
+                                	Source="{Binding icon}"
                                 	WidthRequest="100">
                                 </Image>-->
                                 <StackLayout

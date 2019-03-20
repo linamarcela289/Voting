@@ -1,6 +1,6 @@
 ﻿namespace Voting.Common.Model
 {
-   
+
     using Newtonsoft.Json;
 
     public class Events
@@ -22,9 +22,8 @@
 
         [JsonProperty("user")]
         public User User { get; set; }
-        public override string ToString()
-        {
-            return $"{this.Name}{this.Decription}";
-        }
+
+
+
     }
 }

@@ -15,12 +15,20 @@ namespace Voting.IUFroms.ViewModels
     {
         private readonly ApiService apiService;
         private ObservableCollection<Events> events;
+        private bool isRefreshing;
+
 
 
         public ObservableCollection<Events> Events
         {
             get => this.events;
             set => this.SetValue(ref this.events, value);
+        }
+
+        public bool IsRefreshing
+        {
+            get => this.isRefreshing;
+            set => this.SetValue(ref this.isRefreshing, value);
         }
 
 
@@ -35,11 +43,13 @@ namespace Voting.IUFroms.ViewModels
 
         private async void LoadEvents()
         {
+            this.IsRefreshing = true;
 
             var response = await this.apiService.GetListAsync<Events>(
                    "https://votingevents.azurewebsites.net",
                    "/api",
                    "/Events");
+           
 
             if (!response.IsSuccess)
             {
@@ -47,12 +57,13 @@ namespace Voting.IUFroms.ViewModels
                     "Error",
                     response.Message,
                     "Accept");
-
+                this.IsRefreshing = false;
                 return;
             }
 
             var myevents = (List<Events>)response.Result;
             this.Events = new ObservableCollection<Events>(myevents);
+            this.IsRefreshing = false;
 
         }
     }
