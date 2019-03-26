@@ -8,6 +8,7 @@ namespace Voting.Web.Data
     public class EventsRepository : GenericRepository<Events>, IEventsRepository
     {
         private readonly DataContext context;
+        
 
         public EventsRepository(DataContext context): base(context)
         {

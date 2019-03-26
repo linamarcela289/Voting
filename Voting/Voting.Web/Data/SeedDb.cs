@@ -12,7 +12,7 @@ namespace Voting.Web.Data
     {
         private readonly DataContext context;
         private readonly IUserHelper userHelper;
-        private readonly UserManager<User> userManager;
+      //  private readonly UserManager<User> userManager;
 
         public SeedDb(DataContext context, IUserHelper userHelper)
         {
@@ -41,7 +41,7 @@ namespace Voting.Web.Data
                     UserName = "linagaleano0@gmail.com"
                 };
 
-                var result = await this.userManager.CreateAsync(user, "123456");
+                var result = await this.userHelper.AddUserAsync(user, "123456");
                 if (result != IdentityResult.Success)
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
