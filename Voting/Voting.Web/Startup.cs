@@ -15,6 +15,7 @@ namespace Voting.Web
     using Helpers;
     using Microsoft.IdentityModel.Tokens;
     using System.Text;
+    using Voting.Web.Data.Repository;
 
     public class Startup
     {
@@ -61,6 +62,8 @@ namespace Voting.Web
             services.AddTransient<SeedDb>();
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<IEventsRepository, EventsRepository>();
+            services.AddScoped<ICandidatesRepository, CandidatesRepository>();
+            services.AddScoped<ICountryRepository, CountryRepository>();
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.

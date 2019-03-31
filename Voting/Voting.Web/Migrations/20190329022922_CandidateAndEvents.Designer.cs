@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Voting.Web.Data;
 
 namespace Voting.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190329022922_CandidateAndEvents")]
+    partial class CandidateAndEvents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,7 +233,7 @@ namespace Voting.Web.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<int?>("EventsId");
+                    b.Property<int>("EventsId");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(50);
@@ -347,7 +349,8 @@ namespace Voting.Web.Migrations
 
                     b.HasOne("Voting.Web.Data.Entities.Events", "Events")
                         .WithMany()
-                        .HasForeignKey("EventsId");
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

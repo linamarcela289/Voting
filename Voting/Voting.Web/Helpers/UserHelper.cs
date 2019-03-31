@@ -36,7 +36,6 @@ namespace Voting.Web.Helpers
             return user;
         }
 
-
         public async Task<SignInResult> LoginAsync(LoginViewModel model)
         {
             return await this.signInManager.PasswordSignInAsync(

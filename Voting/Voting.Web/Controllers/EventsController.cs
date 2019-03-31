@@ -1,38 +1,123 @@
 ﻿namespace Voting.Web.Controllers
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using Data;
     using Data.Entities;
     using Helpers;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Voting.Web.Models;
 
-
-    
+    [Authorize(Roles = "Admin")]
     public class EventsController : Controller
     {
         private readonly IEventsRepository eventsRepository;
         private readonly IUserHelper userHelper;
 
-
         public EventsController(IEventsRepository eventsRepository, IUserHelper userHelper)
         {
             this.eventsRepository = eventsRepository;
             this.userHelper = userHelper;
-
         }
 
-        // GET: Events
+        public async Task<IActionResult> DeleteCandidate(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var candidate = await this.eventsRepository.GetCandidateAsync(id.Value);
+            if (candidate == null)
+            {
+                return NotFound();
+            }
+
+            var eventId = await this.eventsRepository.DeleteCandidateAsync(candidate);
+            return this.RedirectToAction($"Details/{eventId}");
+        }
+
+        public async Task<IActionResult> EditCandidate(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var candidate = await this.eventsRepository.GetCandidateAsync(id.Value);
+            if (candidate == null)
+            {
+                return NotFound();
+            }
+
+            return View(candidate);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCandidate(CandidateViewModel candidate)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var eventsId = await this.eventsRepository.UpdateCandidateAsync(candidate);
+                if (eventsId != 0)
+                {
+                    return this.RedirectToAction($"Details/{eventsId}");
+                }
+            }
+
+            return this.View(candidate);
+        }
+
+        public async Task<IActionResult> AddCandidate(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var country = await this.eventsRepository.GetByIdAsync(id.Value);
+            if (country == null)
+            {
+                return NotFound();
+            }
+
+            var model = new CandidateViewModel { EventId = country.Id };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCandidate(CandidateViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var path = string.Empty;
+
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\Candidates", model.ImageFile.FileName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await model.ImageFile.CopyToAsync(stream);
+                    }
+
+                    path = $"~/images/Candidates/{model.ImageFile.FileName}";
+                }
+
+                await this.eventsRepository.AddCandidateAsync(model, path);
+                return this.RedirectToAction($"Details/{model.EventId}");
+
+            }
+
+            return this.View(model);
+        }
 
         public IActionResult Index()
         {
-            return View(this.eventsRepository.GetAll().OrderBy(e => e.Name));
+            return View(this.eventsRepository.GetEventWithCandidate());
         }
 
-
-        // GET: Events/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -40,34 +125,26 @@
                 return NotFound();
             }
 
-            var product = await this.eventsRepository.GetByIdAsync(id.Value);
-            if (product == null)
+            var country = await this.eventsRepository.GetEventsWithCandidateAsync(id.Value);
+            if (country == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(country);
         }
 
-
-        // GET: Events/Create
-        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Events/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Events events)
         {
             if (ModelState.IsValid)
             {
-              
-                events.User = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await this.eventsRepository.CreateAsync(events);
                 return RedirectToAction(nameof(Index));
             }
@@ -75,8 +152,6 @@
             return View(events);
         }
 
-        // GET: Products/Edit/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,51 +159,27 @@
                 return NotFound();
             }
 
-            var product = await this.eventsRepository.GetByIdAsync(id.Value);
-            if (product == null)
+            var events = await this.eventsRepository.GetByIdAsync(id.Value);
+            if (events == null)
             {
                 return NotFound();
             }
-
-            return View(product);
+            return View(events);
         }
 
-
-        // POST: Events/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Events events)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                
-                    events.User = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-                    await this.eventsRepository.UpdateAsync(events);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await this.eventsRepository.ExistAsync(events.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await this.eventsRepository.UpdateAsync(events);
                 return RedirectToAction(nameof(Index));
             }
 
             return View(events);
         }
 
-
-        // GET: Events/Delete/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -142,17 +193,7 @@
                 return NotFound();
             }
 
-            return View(events);
-        }
-
-
-        // POST: Events/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var product = await this.eventsRepository.GetByIdAsync(id);
-            await this.eventsRepository.DeleteAsync(product);
+            await this.eventsRepository.DeleteAsync(events);
             return RedirectToAction(nameof(Index));
         }
 

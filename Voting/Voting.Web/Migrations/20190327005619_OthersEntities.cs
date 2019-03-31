@@ -2,7 +2,7 @@
 
 namespace Voting.Web.Migrations
 {
-    public partial class ValidationUser : Migration
+    public partial class OthersEntities : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

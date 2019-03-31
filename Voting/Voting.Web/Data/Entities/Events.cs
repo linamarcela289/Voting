@@ -1,6 +1,7 @@
 ﻿namespace Voting.Web.Data.Entities
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     public class Events: IEntity
     {
@@ -20,7 +21,13 @@
 
         [Display(Name = "End Date")]
         public DateTime? EndDate { get; set; }
-       
-        public User User { get; set; }
+
+        public ICollection<Candidate> Candidates { get; set; }
+
+        [Display(Name = "# Candidates")]
+        public int NumberCandidates { get { return this.Candidates == null ? 0 : this.Candidates.Count; } }
+
+        //public User User { get; set; }
+
     }
 }

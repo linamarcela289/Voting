@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Voting.Common\Voting.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\Candidates\" />
+  </ItemGroup>
+
 </Project>

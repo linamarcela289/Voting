@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Voting.Web.Data;
 
 namespace Voting.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190329030636_DeleteIdCities")]
+    partial class DeleteIdCities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,7 +223,7 @@ namespace Voting.Web.Migrations
                     b.Property<string>("Address")
                         .HasMaxLength(100);
 
-                    b.Property<int>("CityId");
+                    b.Property<int?>("CityId");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -342,8 +344,7 @@ namespace Voting.Web.Migrations
                 {
                     b.HasOne("Voting.Web.Data.Entities.City", "City")
                         .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CityId");
 
                     b.HasOne("Voting.Web.Data.Entities.Events", "Events")
                         .WithMany()

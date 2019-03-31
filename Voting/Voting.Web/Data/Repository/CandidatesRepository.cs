@@ -1,23 +1,19 @@
-﻿
-namespace Voting.Web.Data
+﻿namespace Voting.Web.Data.Repository
 {
+    using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading.Tasks;
-    using Entities;
-    using Microsoft.EntityFrameworkCore;
+    using Voting.Web.Data.Entities;
     using Voting.Web.Models;
 
-    public class EventsRepository : GenericRepository<Events>, IEventsRepository
+    public class CandidatesRepository : GenericRepository<Candidate>, ICandidatesRepository
     {
         private readonly DataContext context;
-        
 
-        public EventsRepository(DataContext context): base(context)
+        public CandidatesRepository(DataContext context) : base(context)
         {
             this.context = context;
         }
-
-
         public async Task AddCandidateAsync(CandidateViewModel model, string path)
         {
             var events = await this.GetEventsWithCandidateAsync(model.EventId);
@@ -25,11 +21,12 @@ namespace Voting.Web.Data
             {
                 return;
             }
-
-            events.Candidates.Add(new Candidate {
-                 Name = model.Name,
-                 Proposal = model.Proposal,
-                ImageUrl = path});
+            events.Candidates.Add(new Candidate
+            {
+                Name = model.Name,
+                Proposal = model.Proposal,
+                ImageUrl = path
+            });
             this.context.Events.Update(events);
             await this.context.SaveChangesAsync();
         }
@@ -75,11 +72,11 @@ namespace Voting.Web.Data
             return events.Id;
         }
 
-        public async Task<Candidate> GetCandidateAsync(int id)
+        public async Task<City> GetCandidateAsync(int id)
         {
-            return await this.context.Candidates.FindAsync(id);
+            return await this.context.Cities.FindAsync(id);
         }
-
- 
     }
+
 }
+

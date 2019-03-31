@@ -10,8 +10,8 @@ using Voting.Web.Data;
 namespace Voting.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190326013928_ValidationUser")]
-    partial class ValidationUser
+    [Migration("20190327005619_OthersEntities")]
+    partial class OthersEntities
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -131,6 +131,31 @@ namespace Voting.Web.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Voting.Web.Data.Entities.Candidate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("EventsId");
+
+                    b.Property<string>("ImageUrl");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Proposal")
+                        .IsRequired()
+                        .HasMaxLength(300);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventsId");
+
+                    b.ToTable("Candidates");
+                });
+
             modelBuilder.Entity("Voting.Web.Data.Entities.Events", b =>
                 {
                     b.Property<int>("Id")
@@ -149,7 +174,8 @@ namespace Voting.Web.Migrations
 
                     b.Property<DateTime?>("StarDate");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -213,6 +239,26 @@ namespace Voting.Web.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Voting.Web.Data.Entities.Vote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CandidateId");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Votes");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -258,11 +304,33 @@ namespace Voting.Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Voting.Web.Data.Entities.Candidate", b =>
+                {
+                    b.HasOne("Voting.Web.Data.Entities.Events", "Events")
+                        .WithMany()
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Voting.Web.Data.Entities.Events", b =>
                 {
                     b.HasOne("Voting.Web.Data.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Voting.Web.Data.Entities.Vote", b =>
+                {
+                    b.HasOne("Voting.Web.Data.Entities.Candidate", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Voting.Web.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }
