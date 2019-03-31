@@ -18,8 +18,8 @@
         [HttpGet]
         public IActionResult GetEvents()
         {
-            // return this.Ok(this.eventsRepository.GetAllWithUsers());
-            return this.Ok();
+           return this.Ok(this.eventsRepository.GetAll());
+           
         }
 
     }

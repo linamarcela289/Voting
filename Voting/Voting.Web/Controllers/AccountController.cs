@@ -13,19 +13,26 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
     using Models;
-   
+    using Voting.Web.Data.Repository;
+
     public class AccountController : Controller
     {
         private readonly IUserHelper userHelper;
         private readonly IConfiguration configuration;
+        private readonly ICountryRepository countryRepository;
+        private readonly IMailHelper mailHelper;
 
         public AccountController(
             IUserHelper userHelper,
-            IConfiguration configuration
+            IConfiguration configuration,
+            ICountryRepository countryRepository,
+            IMailHelper mailHelper
 )
         {
             this.userHelper = userHelper;
             this.configuration = configuration;
+            this.countryRepository = countryRepository;
+            this.mailHelper = mailHelper;
         }
 
         public IActionResult Login()
@@ -66,7 +73,14 @@
         }
         public IActionResult Register()
         {
-            return this.View();
+            var model = new RegisterNewUserViewModel
+            {
+                Countries = this.countryRepository.GetComboCountries(),
+                Cities = this.countryRepository.GetComboCities(0)
+            };
+
+            return this.View(model);
+
         }
 
         [HttpPost]
@@ -77,12 +91,20 @@
                 var user = await this.userHelper.GetUserByEmailAsync(model.Username);
                 if (user == null)
                 {
+                    var city = await this.countryRepository.GetCityAsync(model.CityId);
+
                     user = new User
                     {
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         Email = model.Username,
-                        UserName = model.Username
+                        UserName = model.Username,
+                        Address = model.Address,
+                        PhoneNumber = model.PhoneNumber,
+                        CityId = model.CityId,
+                        City = city
+
+
                     };
 
                     var result = await this.userHelper.AddUserAsync(user, model.Password);
@@ -216,7 +238,7 @@
                             this.configuration["Tokens:Issuer"],
                             this.configuration["Tokens:Audience"],
                             claims,
-                            expires: DateTime.UtcNow.AddDays(15),
+                            expires: DateTime.UtcNow.AddDays(30),
                             signingCredentials: credentials);
                         var results = new
                         {
@@ -231,11 +253,98 @@
 
             return this.BadRequest();
         }
+
         public IActionResult NotAuthorized()
         {
             return this.View();
         }
 
+        public async Task<JsonResult> GetCitiesAsync(int countryId)
+        {
+            var country = await this.countryRepository.GetCountryWithCitiesAsync(countryId);
+            return this.Json(country.Cities.OrderBy(c => c.Name));
+        }
+
+        public IActionResult RecoverPassword()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var user = await this.userHelper.GetUserByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "The email doesn't correspont to a registered user.");
+                    return this.View(model);
+                }
+
+                var myToken = await this.userHelper.GeneratePasswordResetTokenAsync(user);
+                var link = this.Url.Action(
+                    "ResetPassword",
+                    "Account",
+                    new { token = myToken }, protocol: HttpContext.Request.Scheme);
+                this.mailHelper.SendMail(model.Email, "Shop Password Reset", $"<h1>Shop Password Reset</h1>" +
+                    $"To reset the password click in this link:</br></br>" +
+                    $"<a href = \"{link}\">Reset Password</a>");
+                this.ViewBag.Message = "The instructions to recover your password has been sent to email.";
+                return this.View();
+
+            }
+
+            return this.View(model);
+        
+    }
+
+    public IActionResult ResetPassword(string token)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            var user = await this.userHelper.GetUserByEmailAsync(model.UserName);
+            if (user != null)
+            {
+                var result = await this.userHelper.ResetPasswordAsync(user, model.Token, model.Password);
+                if (result.Succeeded)
+                {
+                    this.ViewBag.Message = "Password reset successful.";
+                    return this.View();
+                }
+
+                this.ViewBag.Message = "Error while resetting the password.";
+                return View(model);
+            }
+
+            this.ViewBag.Message = "User not found.";
+            return View(model);
+        }
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return this.NotFound();
+            }
+
+            var user = await this.userHelper.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return this.NotFound();
+            }
+
+            var result = await this.userHelper.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                return this.NotFound();
+            }
+
+            return View();
+        }
 
 
     }
