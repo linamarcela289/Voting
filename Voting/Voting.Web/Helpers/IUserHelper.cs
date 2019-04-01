@@ -2,6 +2,7 @@
 
 namespace Voting.Web.Helpers
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Data.Entities;
     using Microsoft.AspNetCore.Identity;
@@ -37,6 +38,13 @@ namespace Voting.Web.Helpers
         Task<IdentityResult> ConfirmEmailAsync(User user, string token);
 
         Task<User> GetUserByIdAsync(string userId);
+
+        Task<List<User>> GetAllUsersAsync();
+
+        Task RemoveUserFromRoleAsync(User user, string roleName);
+
+        Task DeleteUserAsync(User user);
+
 
     }
 

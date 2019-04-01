@@ -1,15 +1,16 @@
 ﻿namespace Voting.Web.Controllers
 {
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
     using Data;
     using Data.Entities;
     using Helpers;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using System.IO;
-    using System.Threading.Tasks;
     using Voting.Web.Models;
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "UserVote")]
     public class EventsController : Controller
     {
         private readonly IEventsRepository eventsRepository;
@@ -95,14 +96,20 @@
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\Candidates", model.ImageFile.FileName);
+                    var guid = Guid.NewGuid().ToString();
+                    var file = $"{guid}.jpg";
+
+                    path = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                       "wwwroot\\images\\Candidates",
+                        file);
 
                     using (var stream = new FileStream(path, FileMode.Create))
                     {
                         await model.ImageFile.CopyToAsync(stream);
                     }
 
-                    path = $"~/images/Candidates/{model.ImageFile.FileName}";
+                    path = $"~/images/Candidates/{file}";
                 }
 
                 await this.eventsRepository.AddCandidateAsync(model, path);

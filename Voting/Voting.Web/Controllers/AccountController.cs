@@ -84,7 +84,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterNewUserViewModel model)
+        public async Task<IActionResult> Register(RegisterNewUserViewModel model )
         {
             if (this.ModelState.IsValid)
             {
@@ -123,10 +123,13 @@
                     };
 
                     var result2 = await this.userHelper.LoginAsync(loginViewModel);
+                  
 
                     if (result2.Succeeded)
                     {
+
                         return this.RedirectToAction("Index", "Home");
+
                     }
 
                     this.ModelState.AddModelError(string.Empty, "The user couldn't be login.");
@@ -142,11 +145,16 @@
         public async Task<IActionResult> ChangeUser()
         {
             var user = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+            
             var model = new ChangeUserViewModel();
             if (user != null)
             {
                 model.FirstName = user.FirstName;
                 model.LastName = user.LastName;
+                model.Address = user.Address;
+                model.PhoneNumber = user.PhoneNumber;
+               
+
             }
 
             return this.View(model);
@@ -161,6 +169,9 @@
                 {
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
+                    user.Address = model.Address;
+                    user.PhoneNumber = model.PhoneNumber;
+
                     var respose = await this.userHelper.UpdateUserAsync(user);
                     if (respose.Succeeded)
                     {
@@ -299,7 +310,73 @@
         
     }
 
-    public IActionResult ResetPassword(string token)
+        public async Task<IActionResult> Index()
+        {
+            var users = await this.userHelper.GetAllUsersAsync();
+            foreach (var user in users)
+            {
+                var myUser = await this.userHelper.GetUserByIdAsync(user.Id);
+                if (myUser != null)
+                {
+                    user.IsAdmin = await this.userHelper.IsUserInRoleAsync(myUser, "Admin");
+                }
+            }
+
+            return this.View(users);
+        }
+
+        public async Task<IActionResult> AdminOff(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var user = await this.userHelper.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            await this.userHelper.RemoveUserFromRoleAsync(user, "Admin");
+            return this.RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> AdminOn(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var user = await this.userHelper.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            await this.userHelper.AddUserToRoleAsync(user, "Admin");
+            return this.RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var user = await this.userHelper.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            await this.userHelper.DeleteUserAsync(user);
+            return this.RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ResetPassword(string token)
         {
             return View();
         }
@@ -349,6 +426,7 @@
 
     }
 
+   
 
 }
 

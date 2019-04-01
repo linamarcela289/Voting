@@ -29,7 +29,7 @@ namespace Voting.Web.Data
             await this.context.Database.EnsureCreatedAsync();
 
             await this.userHelper.CheckRoleAsync("Admin");
-            await this.userHelper.CheckRoleAsync("Customer");
+            await this.userHelper.CheckRoleAsync("UserVote");
 
             if (!this.context.Countries.Any())
             {

@@ -51,9 +51,16 @@
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td id="@item.Id">
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" id="btnDelete">Delete</a>
+                @if (this.User.Identity.IsAuthenticated)
+                {
+                    @if (this.User.IsInRole("Admin"))
+                    {
+
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" id="btnDelete">Delete</a>
+                    }
+                }
             </td>
         </tr>
         }
