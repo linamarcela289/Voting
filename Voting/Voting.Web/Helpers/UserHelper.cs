@@ -70,6 +70,7 @@ namespace Voting.Web.Helpers
                 false);
         }
 
+
         public async Task CheckRoleAsync(string roleName)
         {
             var roleExists = await this.roleManager.RoleExistsAsync(roleName);

@@ -10,7 +10,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Voting.Web.Models;
 
-    [Authorize(Roles = "UserVote")]
+    [Authorize(Roles = "Admin")]
     public class EventsController : Controller
     {
         private readonly IEventsRepository eventsRepository;

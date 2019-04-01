@@ -36,7 +36,7 @@ namespace Voting.Web.Data.Entities
         [NotMapped]
         [Display(Name = "Is Admin?")]
         public bool IsAdmin { get; set; }
-        public Events Events { get; set; }
+       // public Events Events { get; set; }
 
     }
 }

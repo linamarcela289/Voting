@@ -77,36 +77,33 @@ namespace Voting.Web.Data
                 await this.userHelper.AddUserToRoleAsync(user, "Admin");
                 var token = await this.userHelper.GenerateEmailConfirmationTokenAsync(user);
                 await this.userHelper.ConfirmEmailAsync(user, token);
-
             }
-
-
 
             if (!this.context.Events.Any())
             {
                 this.AddEvent(
                    "First Event",
                    "Lorem Ipsum is simply dummy text of the printing and" +
-                   " typesetting industry.");
+                   " typesetting industry.",user);
                 this.AddEvent(
                     "Second Event",
                     "Lorem Ipsum is simply dummy text of the printing and " +
-                    "typesetting industry.");
+                    "typesetting industry.", user);
                 this.AddEvent(
                     "Third Event",
                     "Lorem Ipsum is simply dummy text of the printing and " +
-                    "typesetting industry.");
+                    "typesetting industry.", user);
                 await this.context.SaveChangesAsync();
             }
         }
 
-        private void AddEvent(string name, string descripton)
+        private void AddEvent(string name, string descripton, User user)
         {
             this.context.Events.Add(new Events
             {
                 Name = name,
                 Decription = descripton,
-             //   User = user
+                 User = user
             });
         }
 
