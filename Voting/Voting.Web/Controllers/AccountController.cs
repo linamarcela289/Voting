@@ -234,7 +234,7 @@
                     var result = await this.userHelper.ValidatePasswordAsync(
                         user,
                         model.Password);
-
+                    
                     if (result.Succeeded)
                     {
                         var claims = new[]
