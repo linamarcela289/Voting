@@ -20,8 +20,6 @@ namespace Voting.Web.Data
         {
             this.context = context;
             this.userHelper = userHelper;
-          
-
         }
 
         public async Task SeedAsync()
@@ -68,15 +66,16 @@ namespace Voting.Web.Data
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
                 }
-                await this.userHelper.AddUserToRoleAsync(user, "Admin");
 
+                await this.userHelper.AddUserToRoleAsync(user, "Admin");
+                var token = await this.userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await this.userHelper.ConfirmEmailAsync(user, token);
             }
+
             var isInRole = await this.userHelper.IsUserInRoleAsync(user, "Admin");
             if (!isInRole)
             {
                 await this.userHelper.AddUserToRoleAsync(user, "Admin");
-                var token = await this.userHelper.GenerateEmailConfirmationTokenAsync(user);
-                await this.userHelper.ConfirmEmailAsync(user, token);
             }
 
             if (!this.context.Events.Any())
