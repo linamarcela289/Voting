@@ -93,6 +93,7 @@ namespace Voting.Web.Helpers
         {
             return await this.userManager.IsInRoleAsync(user, roleName);
 
+
         }
         public async Task<string> GeneratePasswordResetTokenAsync(User user)
         {
