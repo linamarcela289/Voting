@@ -11,7 +11,7 @@
     using Microsoft.EntityFrameworkCore;
     using Voting.Web.Models;
 
-    [Authorize(Roles = "Admin")]
+   
     public class EventsController : Controller
     {
         private readonly IEventsRepository eventsRepository;
@@ -22,7 +22,7 @@
             this.eventsRepository = eventsRepository;
             this.userHelper = userHelper;
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCandidate(int? id)
         {
             if (id == null)
@@ -40,6 +40,7 @@
             return this.RedirectToAction($"Details/{eventId}");
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditCandidate(int? id)
         {
             if (id == null)
@@ -56,6 +57,7 @@
             var view = this.ToCandidateViewModel(candidate);
             return View(view);
         }
+
         private CandidateViewModel ToCandidateViewModel(Candidate candidate)
         {
             return new CandidateViewModel
@@ -66,6 +68,7 @@
                 Name = candidate.Name
             };
         }
+
         [HttpPost]
         public async Task<IActionResult> EditCandidate(CandidateViewModel view)
         {
@@ -118,6 +121,8 @@
                 Name = view.Name
             };
         }
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddCandidate(int? id)
         {
             if (id == null)
@@ -173,6 +178,10 @@
             return View(this.eventsRepository.GetEventWithCandidate());
         }
 
+        public IActionResult Result()
+        {
+            return View(this.eventsRepository.GetEvent());
+        }
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -189,6 +198,7 @@
             return View(country);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -207,6 +217,7 @@
             return View(events);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -237,6 +248,7 @@
             return View(events);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

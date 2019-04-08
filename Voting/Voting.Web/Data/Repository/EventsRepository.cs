@@ -1,23 +1,19 @@
 ﻿
 namespace Voting.Web.Data
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using Entities;
     using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Voting.Web.Models;
 
     public class EventsRepository : GenericRepository<Events>, IEventsRepository
     {
         private readonly DataContext context;
-        
-
-        public EventsRepository(DataContext context): base(context)
+        public EventsRepository(DataContext context) : base(context)
         {
             this.context = context;
         }
-
-
         public async Task AddCandidateAsync(CandidateViewModel model, string path)
         {
             var events = await this.GetEventsWithCandidateAsync(model.EventId);
@@ -25,11 +21,12 @@ namespace Voting.Web.Data
             {
                 return;
             }
-
-            events.Candidates.Add(new Candidate {
-                 Name = model.Name,
-                 Proposal = model.Proposal,
-                ImageUrl = path});
+            events.Candidates.Add(new Candidate
+            {
+                Name = model.Name,
+                Proposal = model.Proposal,
+                ImageUrl = path
+            });
             this.context.Events.Update(events);
             await this.context.SaveChangesAsync();
         }
@@ -52,6 +49,13 @@ namespace Voting.Web.Data
             return this.context.Events
                 .Include(c => c.Candidates)
                 .OrderBy(c => c.Name);
+        }
+
+        public IQueryable GetEvent()
+        {
+            return this.context.Events
+           .Include(c => c.Candidates)
+           .OrderBy(c => c.Name);
         }
 
         public async Task<Events> GetEventsWithCandidateAsync(int id)

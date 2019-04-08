@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Voting.Web.Data;
 
 namespace Voting.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190408023415_DateEvents")]
+    partial class DateEvents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,13 +200,13 @@ namespace Voting.Web.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
-                    b.Property<DateTime?>("EndDate");
+                    b.Property<DateTime>("EndDate");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<DateTime?>("StarDate");
+                    b.Property<DateTime>("StarDate");
 
                     b.Property<string>("UserId");
 

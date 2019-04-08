@@ -18,11 +18,11 @@
 
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Star Date")]
-        public string StarDate { get; set; }
+        public DateTime? StarDate { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "End Date")]
-        public string EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public ICollection<Candidate> Candidates { get; set; }
 
