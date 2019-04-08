@@ -42,8 +42,6 @@ namespace Voting.Web
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<DataContext>();
-
-
             services.AddDbContext<DataContext>(cfg =>
             {
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));

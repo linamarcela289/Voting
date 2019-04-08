@@ -62,7 +62,7 @@ namespace Voting.Web.Data
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<int> UpdateCandidateAsync(CandidateViewModel candidate)
+        public async Task<int> UpdateCandidateAsync(Candidate candidate)
         {
             var events = await this.context.Events.Where(c => c.Candidates.Any(ci => ci.Id == candidate.Id)).FirstOrDefaultAsync();
             if (events == null)
@@ -79,7 +79,5 @@ namespace Voting.Web.Data
         {
             return await this.context.Candidates.FindAsync(id);
         }
-
- 
     }
 }

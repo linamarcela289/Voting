@@ -8,6 +8,7 @@
     using Helpers;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using Voting.Web.Models;
 
     [Authorize(Roles = "Admin")]
@@ -52,24 +53,71 @@
                 return NotFound();
             }
 
-            return View(candidate);
+            var view = this.ToCandidateViewModel(candidate);
+            return View(view);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> EditCandidate(CandidateViewModel candidate)
+        private CandidateViewModel ToCandidateViewModel(Candidate candidate)
         {
-            if (this.ModelState.IsValid)
+            return new CandidateViewModel
             {
-                var eventsId = await this.eventsRepository.UpdateCandidateAsync(candidate);
-                if (eventsId != 0)
+                Id = candidate.Id,
+                ImageUrl = candidate.ImageUrl,
+                Proposal = candidate.Proposal,
+                Name = candidate.Name
+            };
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditCandidate(CandidateViewModel view)
+        {
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    return this.RedirectToAction($"Details/{eventsId}");
-                }
-            }
+                    var path = view.ImageUrl;
 
-            return this.View(candidate);
+                    if (view.ImageFile != null && view.ImageFile.Length > 0)
+                    {
+                        path = Path.Combine(Directory.GetCurrentDirectory(), 
+                        "wwwroot\\images\\Candidates", 
+                        view.ImageFile.FileName);
+
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            await view.ImageFile.CopyToAsync(stream);
+                        }
+                        path = $"~/images/Candidates/{view.ImageFile.FileName}";
+                    }
+
+                    var candidate = this.ToCandidate(view, path);
+                    await this.eventsRepository.UpdateCandidateAsync(candidate);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await this.eventsRepository.ExistAsync(view.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(view);
+
         }
 
+        private Candidate ToCandidate(CandidateViewModel view, string path)
+        {
+            return new Candidate
+            {
+                Id = view.Id,
+                ImageUrl = path,
+                Proposal = view.Proposal,
+                Name = view.Name
+            };
+        }
         public async Task<IActionResult> AddCandidate(int? id)
         {
             if (id == null)
@@ -171,6 +219,8 @@
             {
                 return NotFound();
             }
+           // var view = this.ToProducViewModel(product);
+
             return View(events);
         }
 
@@ -205,4 +255,6 @@
         }
 
     }
+  
+
 }

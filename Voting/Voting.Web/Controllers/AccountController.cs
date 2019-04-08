@@ -84,7 +84,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterNewUserViewModel model )
+        public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
             if (this.ModelState.IsValid)
             {
@@ -103,8 +103,6 @@
                         PhoneNumber = model.PhoneNumber,
                         CityId = model.CityId,
                         City = city
-
-
                     };
 
                     var result = await this.userHelper.AddUserAsync(user, model.Password);
@@ -114,25 +112,17 @@
                         return this.View(model);
                     }
 
-
-                    var loginViewModel = new LoginViewModel
+                    var myToken = await this.userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
                     {
-                        Password = model.Password,
-                        RememberMe = false,
-                        Username = model.Username
-                    };
+                        userid = user.Id,
+                        token = myToken
+                    }, protocol: HttpContext.Request.Scheme);
 
-                    var result2 = await this.userHelper.LoginAsync(loginViewModel);
-                  
-
-                    if (result2.Succeeded)
-                    {
-
-                        return this.RedirectToAction("Index", "Home");
-
-                    }
-
-                    this.ModelState.AddModelError(string.Empty, "The user couldn't be login.");
+                    this.mailHelper.SendMail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                        $"To allow the user, " +
+                        $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                    this.ViewBag.Message = "The instructions to allow your user has been sent to email.";
                     return this.View(model);
                 }
 
@@ -222,7 +212,7 @@
 
             return this.View(model);
         }
-        //Login API
+
         [HttpPost]
         public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
         {

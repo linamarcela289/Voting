@@ -16,7 +16,7 @@ namespace Voting.Web.Data
 
         Task AddCandidateAsync(CandidateViewModel model, string path);
 
-        Task<int> UpdateCandidateAsync(CandidateViewModel candidate);
+        Task<int> UpdateCandidateAsync(Candidate candidate);
 
         Task<int> DeleteCandidateAsync(Candidate candidate);
 
