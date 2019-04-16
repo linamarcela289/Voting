@@ -180,7 +180,11 @@
 
         public IActionResult Result()
         {
-            return View(this.eventsRepository.GetEvent());
+            return View(this.eventsRepository.GetEventWithCandidateResult());
+        }
+        public IActionResult EventVote()
+        {
+            return View(this.eventsRepository.GetEventWithCandidateVote());
         }
         public async Task<IActionResult> Details(int? id)
         {

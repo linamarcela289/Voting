@@ -1,11 +1,15 @@
-﻿@model IEnumerable<Voting.Web.Data.Entities.Events>
+﻿
+@model IEnumerable<Voting.Web.Data.Entities.Events>
 
 @{
-    ViewData["Title"] = "Result";
+    ViewData["Title"] = "Event Vote";
 }
 
-<h2>Result</h2>
+<h2>Events</h2>
 
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -49,17 +53,46 @@
                 <td id="@item.Id">
                     @if (this.User.Identity.IsAuthenticated)
                     {
-                        
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">Details</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" id="btnVote" class="btn btn-warning">Vote</a>
                     }
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
+<div id="voteDialog" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+                <h4 class="modal-title">Vote</h4>
+            </div>
+            <div class="modal-body">
+                <p>Your vote register with exit!!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnOk">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+      var id = 0;
+              $('a[id*=btnVote]').click(function () {
+                debugger;
+                id = $(this).parent()[0].id;
+                $("#voteDialog").modal('show');
+                  return false;
+              });
+              $("#btnNoDelete").click(function () {
+                $("#deleteDialog").modal('hide');
+                return false;
+              });
+</script>
+
 }
 
 

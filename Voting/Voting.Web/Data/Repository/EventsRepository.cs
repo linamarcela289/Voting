@@ -3,6 +3,7 @@ namespace Voting.Web.Data
 {
     using Entities;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Voting.Web.Models;
@@ -50,7 +51,21 @@ namespace Voting.Web.Data
                 .Include(c => c.Candidates)
                 .OrderBy(c => c.Name);
         }
-
+        public IQueryable GetEventWithCandidateResult()
+        {
+            return this.context.Events
+               .Where(d => d.EndDate > DateTime.Today)
+               .Include(c => c.Candidates)
+               .OrderBy(c => c.Name);
+        }
+        public IQueryable GetEventWithCandidateVote()
+        {
+            return this.context.Events
+               .Where(d => d.EndDate <= DateTime.Today)
+               .Include(c => c.Candidates)
+               .OrderBy(c => c.Name);
+        }
+        
         public IQueryable GetEvent()
         {
             return this.context.Events
