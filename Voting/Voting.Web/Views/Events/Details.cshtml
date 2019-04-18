@@ -68,6 +68,9 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.Candidates.FirstOrDefault().ImageUrl)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumberVotes)
+                </th>
                 <th></th>
             </tr>
         </thead>
@@ -86,6 +89,9 @@ else
                     {
                         <img src="@Url.Content(item.ImageUrl)" alt="Image" style="width:100px;height:150px;max-width: 100%; height: auto;" />
                     }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberVotes)
                 </td>
                 <td id="@item.Id">
                     @if (this.User.Identity.IsAuthenticated)

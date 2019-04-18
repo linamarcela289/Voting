@@ -31,5 +31,10 @@
 
         public User User { get; set; }
 
+        public ICollection<Vote> Vote { get; set; }
+
+        [Display(Name = "# Vote")]
+        public int NumberVotes { get { return this.Vote == null ? 0 : this.Vote.Count; } }
+
     }
 }

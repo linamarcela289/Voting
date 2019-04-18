@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using Voting.Web.Models;
+    using Voting.Web.Models;  
 
    
     public class EventsController : Controller
@@ -182,10 +182,6 @@
         {
             return View(this.eventsRepository.GetEventWithCandidateResult());
         }
-        public IActionResult EventVote()
-        {
-            return View(this.eventsRepository.GetEventWithCandidateVote());
-        }
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -202,6 +198,21 @@
             return View(country);
         }
 
+        public async Task<IActionResult> DetailsResult(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var country = await this.eventsRepository.GetEventsWithCandidateAsync(id.Value);
+            if (country == null)
+            {
+                return NotFound();
+            }
+
+            return View(country);
+        }
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {

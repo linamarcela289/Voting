@@ -49,8 +49,10 @@ namespace Voting.Web.Data
         {
             return this.context.Events
                 .Include(c => c.Candidates)
+                .Include(v => v.Vote)
                 .OrderBy(c => c.Name);
         }
+
         public IQueryable GetEventWithCandidateResult()
         {
             return this.context.Events
@@ -58,14 +60,7 @@ namespace Voting.Web.Data
                .Include(c => c.Candidates)
                .OrderBy(c => c.Name);
         }
-        public IQueryable GetEventWithCandidateVote()
-        {
-            return this.context.Events
-               .Where(d => d.EndDate <= DateTime.Today)
-               .Include(c => c.Candidates)
-               .OrderBy(c => c.Name);
-        }
-        
+
         public IQueryable GetEvent()
         {
             return this.context.Events
@@ -76,9 +71,10 @@ namespace Voting.Web.Data
         public async Task<Events> GetEventsWithCandidateAsync(int id)
         {
             return await this.context.Events
-                .Include(c => c.Candidates)
-                .Where(c => c.Id == id)
-                .FirstOrDefaultAsync();
+            .Include(c => c.Candidates)
+            .Include(v => v.Vote)
+            .Where(c => c.Id == id)
+            .FirstOrDefaultAsync();
         }
 
         public async Task<int> UpdateCandidateAsync(Candidate candidate)

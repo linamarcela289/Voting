@@ -19,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.NumberCandidates)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.NumberVotes)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.StarDate)
             </th>
             <th>
@@ -30,30 +33,33 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Decription)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumberCandidates)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StarDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
-                </td>
-                <td id="@item.Id">
-                    @if (this.User.Identity.IsAuthenticated)
-                    {
-                        
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                    }
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Decription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberCandidates)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberVotes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StarDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td id="@item.Id">
+                @if (this.User.Identity.IsAuthenticated)
+                {
+
+                    <a asp-action="DetailsResult" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                }
+            </td>
+        </tr>
         }
     </tbody>
 </table>

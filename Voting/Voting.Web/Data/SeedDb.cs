@@ -1,20 +1,20 @@
 ﻿
 namespace Voting.Web.Data
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Collections.Generic;
     using Entities;
     using Helpers;
     using Microsoft.AspNetCore.Identity;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
 
     public class SeedDb
     {
         private readonly DataContext context;
         private readonly IUserHelper userHelper;
-      //  private readonly UserManager<User> userManager;
+        //  private readonly UserManager<User> userManager;
 
         public SeedDb(DataContext context, IUserHelper userHelper)
         {
@@ -44,7 +44,6 @@ namespace Voting.Web.Data
 
                 await this.context.SaveChangesAsync();
             }
-
             var user = await this.userHelper.GetUserByEmailAsync("linagaleano0@gmail.com");
             if (user == null)
             {
@@ -83,7 +82,7 @@ namespace Voting.Web.Data
                 this.AddEvent(
                    "First Event",
                    "Lorem Ipsum is simply dummy text of the printing and" +
-                   " typesetting industry.",user);
+                   " typesetting industry.", user);
                 this.AddEvent(
                     "Second Event",
                     "Lorem Ipsum is simply dummy text of the printing and " +
@@ -95,19 +94,14 @@ namespace Voting.Web.Data
                 await this.context.SaveChangesAsync();
             }
         }
-
         private void AddEvent(string name, string descripton, User user)
         {
             this.context.Events.Add(new Events
             {
                 Name = name,
                 Decription = descripton,
-                 User = user
+                User = user
             });
         }
-
-
-
     }
-
 }

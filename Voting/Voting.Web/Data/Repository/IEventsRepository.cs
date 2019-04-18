@@ -9,9 +9,11 @@ namespace Voting.Web.Data
     public interface IEventsRepository : IGenericRepository<Events>
     {
         IQueryable GetEventWithCandidate();
+
         IQueryable GetEventWithCandidateResult();
-        IQueryable GetEventWithCandidateVote();
+
         IQueryable GetEvent();
+
         Task<Events> GetEventsWithCandidateAsync(int id);
 
         Task<Candidate> GetCandidateAsync(int id);
@@ -21,6 +23,7 @@ namespace Voting.Web.Data
         Task<int> UpdateCandidateAsync(Candidate candidate);
 
         Task<int> DeleteCandidateAsync(Candidate candidate);
+
 
 
     }
