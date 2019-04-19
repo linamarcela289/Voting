@@ -99,8 +99,9 @@
                         LastName = model.LastName,
                         Email = model.Username,
                         UserName = model.Username,
-                        Address = model.Address,
-                        PhoneNumber = model.PhoneNumber,
+                        Ocupation = model.Ocupation,
+                        Gender = model.Gender,
+                        Birthdate = model.Birthdate,
                         CityId = model.CityId,
                         City = city
                     };
@@ -131,24 +132,39 @@
 
             return this.View(model);
         }
-
         public async Task<IActionResult> ChangeUser()
         {
             var user = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-            
             var model = new ChangeUserViewModel();
+
             if (user != null)
             {
                 model.FirstName = user.FirstName;
                 model.LastName = user.LastName;
-                model.Address = user.Address;
-                model.PhoneNumber = user.PhoneNumber;
-               
+                model.Ocupation = user.Ocupation;
+                model.Stratum = user.Stratum;
+                model.Gender = user.Gender;
+                model.Birthdate = user.Birthdate;
 
+                var city = await this.countryRepository.GetCityAsync(user.CityId);
+                if (city != null)
+                {
+                    var country = await this.countryRepository.GetCountryAsync(city);
+                    if (country != null)
+                    {
+                        model.CountryId = country.Id;
+                        model.Cities = this.countryRepository.GetComboCities(country.Id);
+                        model.Countries = this.countryRepository.GetComboCountries();
+                        model.CityId = user.CityId;
+                    }
+                }
             }
 
+            model.Cities = this.countryRepository.GetComboCities(model.CountryId);
+            model.Countries = this.countryRepository.GetComboCountries();
             return this.View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> ChangeUser(ChangeUserViewModel model)
         {
@@ -157,10 +173,17 @@
                 var user = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 if (user != null)
                 {
+                    var city = await this.countryRepository.GetCityAsync(model.CityId);
+
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
-                    user.Address = model.Address;
-                    user.PhoneNumber = model.PhoneNumber;
+                    user.Ocupation = model.Ocupation;
+                    user.Stratum = model.Stratum;
+                    user.Gender = model.Gender;
+                    user.Birthdate = model.Birthdate;
+                    user.City = city;
+                    user.CityId = model.CountryId;
+
 
                     var respose = await this.userHelper.UpdateUserAsync(user);
                     if (respose.Succeeded)
@@ -415,8 +438,5 @@
 
 
     }
-
-   
-
 }
 

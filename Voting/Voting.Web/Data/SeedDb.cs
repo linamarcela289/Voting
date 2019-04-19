@@ -1,106 +1,150 @@
 ﻿
 namespace Voting.Web.Data
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Entities;
     using Helpers;
     using Microsoft.AspNetCore.Identity;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-
 
     public class SeedDb
     {
         private readonly DataContext context;
         private readonly IUserHelper userHelper;
-        //  private readonly UserManager<User> userManager;
-
         public SeedDb(DataContext context, IUserHelper userHelper)
         {
             this.context = context;
             this.userHelper = userHelper;
         }
-
         public async Task SeedAsync()
         {
             await this.context.Database.EnsureCreatedAsync();
-
-            await this.userHelper.CheckRoleAsync("Admin");
-            await this.userHelper.CheckRoleAsync("UserVote");
-
+            await this.CheckRoles();
             if (!this.context.Countries.Any())
             {
-                var cities = new List<City>();
-                cities.Add(new City { Name = "Medellín" });
-                cities.Add(new City { Name = "Bogotá" });
-                cities.Add(new City { Name = "Calí" });
-
-                this.context.Countries.Add(new Country
-                {
-                    Cities = cities,
-                    Name = "Colombia"
-                });
-
-                await this.context.SaveChangesAsync();
+                await this.AddCountriesAndCitiesAsync();
             }
-            var user = await this.userHelper.GetUserByEmailAsync("linagaleano0@gmail.com");
-            if (user == null)
-            {
-                user = new User
-                {
-                    FirstName = "Lina",
-                    LastName = "Galeano",
-                    Email = "linagaleano0@gmail.com",
-                    UserName = "linagaleano0@gmail.com",
-                    PhoneNumber = "350 634 2747",
-                    Address = "Calle Luna Calle Sol",
-                    CityId = this.context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
-                    City = this.context.Countries.FirstOrDefault().Cities.FirstOrDefault()
-
-                };
-
-                var result = await this.userHelper.AddUserAsync(user, "123456");
-                if (result != IdentityResult.Success)
-                {
-                    throw new InvalidOperationException("Could not create the user in seeder");
-                }
-
-                await this.userHelper.AddUserToRoleAsync(user, "Admin");
-                var token = await this.userHelper.GenerateEmailConfirmationTokenAsync(user);
-                await this.userHelper.ConfirmEmailAsync(user, token);
-            }
-
-            var isInRole = await this.userHelper.IsUserInRoleAsync(user, "Admin");
-            if (!isInRole)
-            {
-                await this.userHelper.AddUserToRoleAsync(user, "Admin");
-            }
-
+            // await this.CheckUserAsync("brad@gmail.com", "Brad", "Pit", "Customer");
+            // await this.CheckUserAsync("angelina@gmail.com", "Angelina", "Jolie", "Customer");
+            //  var user = await this.userHelper.GetUserByEmailAsync("linagaleano0@gmail.com");
+            var user = await this.CheckUserAsync(
+                "linagaleano0@gmail.com", "Lina", "Galeano",
+                "Admin", "Desarrollo", 3, 2);
             if (!this.context.Events.Any())
             {
                 this.AddEvent(
-                   "First Event",
-                   "Lorem Ipsum is simply dummy text of the printing and" +
-                   " typesetting industry.", user);
+                    "Best character of Dragon ball",
+                    "Lorem Ipsum is simply dummy text of the printing and" +
+                    " typesetting industry.", user, Convert.ToDateTime("13/04/2019"), Convert.ToDateTime("15/04/2019"));
                 this.AddEvent(
-                    "Second Event",
+                    "feminine character of more powerful throne game",
                     "Lorem Ipsum is simply dummy text of the printing and " +
-                    "typesetting industry.", user);
+                    "typesetting industry.", user, Convert.ToDateTime("13/04/2019"), Convert.ToDateTime("15/04/2019"));
                 this.AddEvent(
-                    "Third Event",
+                    "Construction of mystical cabins in Medellin",
                     "Lorem Ipsum is simply dummy text of the printing and " +
-                    "typesetting industry.", user);
+                    "typesetting industry.", user, Convert.ToDateTime("13/04/2019"), Convert.ToDateTime("15/04/2019"));
                 await this.context.SaveChangesAsync();
             }
         }
-        private void AddEvent(string name, string descripton, User user)
+        private async Task<User> CheckUserAsync(
+            string userName, string firstName,
+            string lastName, string role,
+            string ocupation, int Stratum,
+            int Gender)
+        {
+            // Add user
+            var user = await this.userHelper.GetUserByEmailAsync(userName);
+            if (user == null)
+            {
+                user = await this.AddUser(
+                    userName, firstName,
+                    lastName, role,
+                    ocupation, Stratum,
+                    Gender);
+            }
+            var isInRole = await this.userHelper.IsUserInRoleAsync(user, role);
+            if (!isInRole)
+            {
+                await this.userHelper.AddUserToRoleAsync(user, role);
+            }
+            return user;
+        }
+        private async Task<User> AddUser(
+            string userName, string firstName,
+            string lastName, string role,
+            string ocupation, int Stratum,
+            int Gender)
+        {
+            var user = new User
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = userName,
+                UserName = userName,
+                Ocupation = ocupation,
+                Stratum = Stratum,
+                Gender = Gender,
+                // Birthdate = Convert.ToDateTime("02/18/1990"),
+                CityId = this.context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
+                City = this.context.Countries.FirstOrDefault().Cities.FirstOrDefault()
+            };
+            var result = await this.userHelper.AddUserAsync(user, "123456");
+            if (result != IdentityResult.Success)
+            {
+                throw new InvalidOperationException("Could not create the user in seeder");
+            }
+
+            await this.userHelper.AddUserToRoleAsync(user, role);
+            var token = await this.userHelper.GenerateEmailConfirmationTokenAsync(user);
+            await this.userHelper.ConfirmEmailAsync(user, token);
+            return user;
+        }
+        private async Task AddCountriesAndCitiesAsync()
+        {
+            this.AddCountry("Colombia", new string[] { "Medellín", "Bogota", "Calí", "Barranquilla", "Bucaramanga", "Cartagena", "Pereira" });
+            this.AddCountry("Argentina", new string[] { "Córdoba", "Buenos Aires", "Rosario", "Tandil", "Salta", "Mendoza" });
+            this.AddCountry("Estados Unidos", new string[] { "New York", "Los Ángeles", "Chicago", "Washington", "San Francisco", "Miami", "Boston" });
+            this.AddCountry("Ecuador", new string[] { "Quito", "Guayaquil", "Ambato", "Manta", "Loja", "Santo" });
+            this.AddCountry("Peru", new string[] { "Lima", "Arequipa", "Cusco", "Trujillo", "Chiclayo", "Iquitos" });
+            this.AddCountry("Chile", new string[] { "Santiago", "Valdivia", "Concepcion", "Puerto Montt", "Temucos", "La Sirena" });
+            this.AddCountry("Uruguay", new string[] { "Montevideo", "Punta del Este", "Colonia del Sacramento", "Las Piedras" });
+            this.AddCountry("Bolivia", new string[] { "La Paz", "Sucre", "Potosi", "Cochabamba" });
+            this.AddCountry("Venezuela", new string[] { "Caracas", "Valencia", "Maracaibo", "Ciudad Bolivar", "Maracay", "Barquisimeto" });
+            this.AddCountry("Paraguay", new string[] { "Asunción", "Ciudad del Este", "Encarnación", "San  Lorenzo", "Luque", "Areguá" });
+            this.AddCountry("Brasil", new string[] { "Rio de Janeiro", "São Paulo", "Salvador", "Porto Alegre", "Curitiba", "Recife", "Belo Horizonte", "Fortaleza" });
+            this.AddCountry("Panamá", new string[] { "Chitré", "Santiago", "La Arena", "Agua Dulce", "Monagrillo", "Ciudad de Panamá", "Colón", "Los Santos" });
+            this.AddCountry("México", new string[] { "Guadalajara", "Ciudad de México", "Monterrey", "Ciudad Obregón", "Hermosillo", "La Paz", "Culiacán", "Los Mochis" });
+            this.AddCountry("Belgica", new string[] { "Aalst", "Bruselas", "Gante", "Brujas", "Gante", "Genk", "Hasselt", "Lovaina" });
+            this.AddCountry("Bulgaria", new string[] { "Blagoevgrad", "Burgas", "Dobrich", "Gabrovo", "Pernik", "Pleven", "Razgrad", "Ruse" });
+            this.AddCountry("Costa Rica", new string[] { "Alajuela", "Cartago", "Cañas", "Chacarita", "Esparza", "Liberia", "Nicoya", "Paraíso" });
+            this.AddCountry("Eslovenia", new string[] { "Ajdovscina", "Izola", "Litija", "Liubliana", "Logatec", "Podhom", "Postojna", "Ravne" });
+            await this.context.SaveChangesAsync();
+        }
+        private void AddCountry(string country, string[] cities)
+        {
+            var theCities = cities.Select(c => new City { Name = c }).ToList();
+            this.context.Countries.Add(new Country
+            {
+                Cities = theCities,
+                Name = country
+            });
+        }
+        private async Task CheckRoles()
+        {
+            await this.userHelper.CheckRoleAsync("Admin");
+            await this.userHelper.CheckRoleAsync("Customer");
+        }
+        private void AddEvent(string name, string descripton, User user, DateTime starDate, DateTime endDate)
         {
             this.context.Events.Add(new Events
             {
                 Name = name,
                 Decription = descripton,
-                User = user
+                User = user,
+                StarDate = starDate,
+                EndDate = endDate
             });
         }
     }

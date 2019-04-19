@@ -56,7 +56,7 @@ namespace Voting.Web.Data
         public IQueryable GetEventWithCandidateResult()
         {
             return this.context.Events
-               .Where(d => d.EndDate > DateTime.Today)
+               .Where(d => d.EndDate < DateTime.Today)
                .Include(c => c.Candidates)
                .OrderBy(c => c.Name);
         }

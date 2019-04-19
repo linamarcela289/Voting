@@ -1,6 +1,7 @@
 ﻿namespace Voting.Web.Models
 {
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -27,10 +28,14 @@
         public string Confirm { get; set; }
 
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters length.")]
-        public string Address { get; set; }
+        public string Ocupation { get; set; }
 
-        [MaxLength(20, ErrorMessage = "The field {0} only can contain {1} characters length.")]
-        public string PhoneNumber { get; set; }
+        public int Stratum { get; set; }
+
+        public int Gender { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime Birthdate { get; set; }
 
         [Display(Name = "City")]
         [Range(1, int.MaxValue, ErrorMessage = "You must select a city.")]

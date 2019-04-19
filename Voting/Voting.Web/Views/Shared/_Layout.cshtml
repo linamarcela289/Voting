@@ -50,7 +50,6 @@
                 <ul class="nav navbar-nav navbar-right">
                     @if (this.User.Identity.IsAuthenticated)
                     {
-                        <li><a asp-area="" asp-controller="Events" asp-action="EventVote">Events Vote</a></li>
                         <li><a asp-area="" asp-controller="Events" asp-action="Result">Result</a></li>
                         <li><a asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a></li>
                         <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>

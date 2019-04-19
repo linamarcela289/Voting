@@ -55,8 +55,7 @@
             <td id="@item.Id">
                 @if (this.User.Identity.IsAuthenticated)
                 {
-
-                    <a asp-action="DetailsResult" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                    <a asp-action="DetailsResult" asp-route-id="@item.Id" class="btn btn-info" title="Details"><i class="fa fa-info-circle"></i></a>
                 }
             </td>
         </tr>

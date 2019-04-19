@@ -2,6 +2,7 @@
 
 namespace Voting.Web.Data.Entities
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using Microsoft.AspNetCore.Identity;
@@ -18,14 +19,16 @@ namespace Voting.Web.Data.Entities
         public string LastName { get; set; }
 
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters length.")]
-        public string Address { get; set; }
+        public string Ocupation { get; set; }
+        public int Stratum{ get; set; }
+
+        public int Gender { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime? Birthdate { get; set; }
 
         public int CityId { get; set; }
-
         public City City { get; set; }
-
-        [Display(Name = "Phone Number")]
-        public override string PhoneNumber { get => base.PhoneNumber; set => base.PhoneNumber = value; }
 
         [Display(Name = "Full Name")]
         public string FullName { get { return $"{this.FirstName} {this.LastName}"; } }
