@@ -53,14 +53,6 @@ namespace Voting.Web.Data
                 .OrderBy(c => c.Name);
         }
 
-        public IQueryable GetEventWithCandidateResult()
-        {
-            return this.context.Events
-               .Where(d => d.EndDate < DateTime.Today)
-               .Include(c => c.Candidates)
-               .OrderBy(c => c.Name);
-        }
-
         public IQueryable GetEvent()
         {
             return this.context.Events

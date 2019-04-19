@@ -101,6 +101,7 @@
                         UserName = model.Username,
                         Ocupation = model.Ocupation,
                         Gender = model.Gender,
+                        Stratum = model.Stratum,
                         Birthdate = model.Birthdate,
                         CityId = model.CityId,
                         City = city
@@ -180,6 +181,7 @@
                     user.Ocupation = model.Ocupation;
                     user.Stratum = model.Stratum;
                     user.Gender = model.Gender;
+                    user.Stratum = model.Stratum;
                     user.Birthdate = model.Birthdate;
                     user.City = city;
                     user.CityId = model.CountryId;
