@@ -12,10 +12,12 @@ namespace Voting.Web.Data
     {
         private readonly DataContext context;
         private readonly IUserHelper userHelper;
+        private readonly DateTime date;
         public SeedDb(DataContext context, IUserHelper userHelper)
         {
             this.context = context;
             this.userHelper = userHelper;
+            this.date = DateTime.Now;
         }
         public async Task SeedAsync()
         {
@@ -25,9 +27,7 @@ namespace Voting.Web.Data
             {
                 await this.AddCountriesAndCitiesAsync();
             }
-            // await this.CheckUserAsync("brad@gmail.com", "Brad", "Pit", "Customer");
-            // await this.CheckUserAsync("angelina@gmail.com", "Angelina", "Jolie", "Customer");
-            //  var user = await this.userHelper.GetUserByEmailAsync("linagaleano0@gmail.com");
+            
             var user = await this.CheckUserAsync(
                 "linagaleano0@gmail.com", "Lina", "Galeano",
                 "Admin", "Desarrollo", 3, 2);
@@ -36,15 +36,15 @@ namespace Voting.Web.Data
                 this.AddEvent(
                     "Best character of Dragon ball",
                     "Lorem Ipsum is simply dummy text of the printing and" +
-                    " typesetting industry.", user, Convert.ToDateTime("13/04/2019"), Convert.ToDateTime("15/04/2019"));
+                    " typesetting industry.", user, date, date.AddDays(3));
                 this.AddEvent(
                     "feminine character of more powerful throne game",
                     "Lorem Ipsum is simply dummy text of the printing and " +
-                    "typesetting industry.", user, Convert.ToDateTime("13/04/2019"), Convert.ToDateTime("15/04/2019"));
+                    "typesetting industry.", user, date, date.AddDays(3));
                 this.AddEvent(
                     "Construction of mystical cabins in Medellin",
                     "Lorem Ipsum is simply dummy text of the printing and " +
-                    "typesetting industry.", user, Convert.ToDateTime("13/04/2019"), Convert.ToDateTime("15/04/2019"));
+                    "typesetting industry.", user, date, date.AddDays(3));
                 await this.context.SaveChangesAsync();
             }
         }

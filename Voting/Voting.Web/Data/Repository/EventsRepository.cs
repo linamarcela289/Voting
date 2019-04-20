@@ -59,6 +59,14 @@ namespace Voting.Web.Data
            .Include(c => c.Candidates)
            .OrderBy(c => c.Name);
         }
+        public IQueryable GetEventWithCandidateWithResult()
+        {
+            return this.context.Events
+                .Where(d => d.EndDate < DateTime.Now)
+                .Include(c => c.Candidates)
+                .Include(v => v.Vote)
+                .OrderBy(c => c.Name);
+        }
 
         public async Task<Events> GetEventsWithCandidateAsync(int id)
         {

@@ -11,6 +11,7 @@ namespace Voting.Web.Data
         IQueryable GetEventWithCandidate();
 
         IQueryable GetEvent();
+        IQueryable GetEventWithCandidateWithResult();
 
         Task<Events> GetEventsWithCandidateAsync(int id);
 

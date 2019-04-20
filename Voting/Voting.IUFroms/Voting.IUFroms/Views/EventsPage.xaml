@@ -22,11 +22,11 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                              <!--  <Image
+                                <Image
                                 	Grid.Column="0"
-                                	Source="{Binding icon}"
+                                	Source="calendario"
                                 	WidthRequest="100">
-                                </Image>-->
+                                </Image>
                                 <StackLayout
                                 	Grid.Column="1"
                                 	VerticalOptions="Center">
@@ -59,7 +59,6 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-
             </ListView>
         </StackLayout>
     </ContentPage.Content>

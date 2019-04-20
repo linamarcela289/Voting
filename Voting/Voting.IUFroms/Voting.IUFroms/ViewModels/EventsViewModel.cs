@@ -2,12 +2,12 @@
 
 namespace Voting.IUFroms.ViewModels
 {
+    using Common.Model;
+    using Common.Service;
+    using GalaSoft.MvvmLight.Command;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows.Input;
-    using Common.Model;
-    using Common.Services;
-    using GalaSoft.MvvmLight.Command;
     using Xamarin.Forms;
 
 
@@ -16,22 +16,16 @@ namespace Voting.IUFroms.ViewModels
         private readonly ApiService apiService;
         private ObservableCollection<Events> events;
         private bool isRefreshing;
-
-
-
         public ObservableCollection<Events> Events
         {
             get => this.events;
             set => this.SetValue(ref this.events, value);
         }
-
         public bool IsRefreshing
         {
             get => this.isRefreshing;
             set => this.SetValue(ref this.isRefreshing, value);
         }
-
-
 
         public ICommand RefreshCommand => new RelayCommand(this.LoadEvents);
 
@@ -44,12 +38,13 @@ namespace Voting.IUFroms.ViewModels
         private async void LoadEvents()
         {
             this.IsRefreshing = true;
-
+            var url = Application.Current.Resources["UrlAPI"].ToString();
             var response = await this.apiService.GetListAsync<Events>(
-                   "https://votingevents.azurewebsites.net",
+                    url,
                    "/api",
-                   "/Events");
-           
+                   "/Events",
+                   "bearer",
+                   MainViewModel.GetInstance().Token.Token);
 
             if (!response.IsSuccess)
             {
@@ -60,13 +55,9 @@ namespace Voting.IUFroms.ViewModels
                 this.IsRefreshing = false;
                 return;
             }
-
             var myevents = (List<Events>)response.Result;
             this.Events = new ObservableCollection<Events>(myevents);
             this.IsRefreshing = false;
-
         }
     }
-
-
 }

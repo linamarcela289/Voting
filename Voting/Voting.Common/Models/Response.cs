@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Voting.Common.Model
+﻿namespace Voting.Common.Model
 {
-   public class Response
+    public class Response
     {
         public bool IsSuccess { get; set; }
         public string Message { get; set; }

@@ -1,9 +1,7 @@
-﻿
+﻿using Newtonsoft.Json;
 namespace Voting.Common.Model
 {
     using System;
-    using Newtonsoft.Json;
-    
 
     public partial class User
     {

@@ -7,6 +7,8 @@ namespace Voting.IUFroms
 
     public partial class App : Application
     {
+        internal static NavigationPage Navigator;
+
         public App()
         {
             InitializeComponent();
