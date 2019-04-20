@@ -11,6 +11,33 @@ namespace Voting.Common.Model
         [JsonProperty("lastName")]
         public string LastName { get; set; }
 
+        [JsonProperty("ocupation")]
+        public string Ocupation { get; set; }
+
+        [JsonProperty("stratum")]
+        public long Stratum { get; set; }
+
+        [JsonProperty("gender")]
+        public long Gender { get; set; }
+
+        [JsonProperty("birthdate")]
+        public object Birthdate { get; set; }
+
+        [JsonProperty("cityId")]
+        public long CityId { get; set; }
+
+        [JsonProperty("city")]
+        public object City { get; set; }
+
+        [JsonProperty("fullName")]
+        public string FullName { get; set; }
+
+        [JsonProperty("emailConfirmed")]
+        public bool EmailConfirmed { get; set; }
+
+        [JsonProperty("isAdmin")]
+        public bool IsAdmin { get; set; }
+
         [JsonProperty("id")]
         public Guid Id { get; set; }
 
@@ -25,9 +52,6 @@ namespace Voting.Common.Model
 
         [JsonProperty("normalizedEmail")]
         public string NormalizedEmail { get; set; }
-
-        [JsonProperty("emailConfirmed")]
-        public bool EmailConfirmed { get; set; }
 
         [JsonProperty("passwordHash")]
         public string PasswordHash { get; set; }
