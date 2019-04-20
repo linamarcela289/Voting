@@ -16,6 +16,7 @@ namespace Voting.Web.Data
         Task<Events> GetEventsWithCandidateAsync(int id);
 
         Task<Candidate> GetCandidateAsync(int id);
+        IQueryable GetAllWithUsers();
 
         Task AddCandidateAsync(CandidateViewModel model, string path);
 

@@ -14,10 +14,11 @@
 
         [MaxLength(200, ErrorMessage = "The field {0} only can contain a maximum {1} characters")]
         [Required]
+        [Display(Name = "Description")]
         public string Decription { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Star Date")]
+        [Display(Name = "Start Date")]
         public DateTime? StarDate { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]

@@ -130,13 +130,13 @@
                 return NotFound();
             }
 
-            var country = await this.eventsRepository.GetByIdAsync(id.Value);
-            if (country == null)
+            var events = await this.eventsRepository.GetByIdAsync(id.Value);
+            if (events == null)
             {
                 return NotFound();
             }
 
-            var model = new CandidateViewModel { EventId = country.Id };
+            var model = new CandidateViewModel { EventId = events.Id };
             return View(model);
         }
 
@@ -189,13 +189,13 @@
                 return NotFound();
             }
 
-            var country = await this.eventsRepository.GetEventsWithCandidateAsync(id.Value);
-            if (country == null)
+            var events = await this.eventsRepository.GetEventsWithCandidateAsync(id.Value);
+            if (events == null)
             {
                 return NotFound();
             }
 
-            return View(country);
+            return View(events);
         }
 
         public async Task<IActionResult> DetailsResult(int? id)

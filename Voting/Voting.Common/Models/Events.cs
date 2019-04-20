@@ -1,6 +1,7 @@
 ﻿namespace Voting.Common.Model
 {
     using Newtonsoft.Json;
+    using System;
 
     public partial class Events
     {
@@ -14,10 +15,10 @@
         public string Decription { get; set; }
 
         [JsonProperty("starDate")]
-        public object StarDate { get; set; }
+        public DateTime StarDate { get; set; }
 
         [JsonProperty("endDate")]
-        public object EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         [JsonProperty("user")]
         public User User { get; set; }

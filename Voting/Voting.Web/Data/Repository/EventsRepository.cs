@@ -15,6 +15,11 @@ namespace Voting.Web.Data
         {
             this.context = context;
         }
+        public IQueryable GetAllWithUsers()
+        {
+            return this.context.Events.Include(p => p.User).OrderBy(p => p.Name);
+        }
+
         public async Task AddCandidateAsync(CandidateViewModel model, string path)
         {
             var events = await this.GetEventsWithCandidateAsync(model.EventId);
