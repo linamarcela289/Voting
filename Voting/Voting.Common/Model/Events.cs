@@ -1,7 +1,8 @@
 ﻿namespace Voting.Common.Model
 {
-
+    using System;
     using Newtonsoft.Json;
+  
 
     public class Events
     {
@@ -15,15 +16,24 @@
         public string Decription { get; set; }
 
         [JsonProperty("starDate")]
-        public object StarDate { get; set; }
+        public DateTime StarDate { get; set; }
 
         [JsonProperty("endDate")]
-        public object EndDate { get; set; }
+        public DateTime EndDate { get; set; }
+
+        [JsonProperty("candidates")]
+        public object Candidates { get; set; }
+
+        [JsonProperty("numberCandidates")]
+        public long NumberCandidates { get; set; }
 
         [JsonProperty("user")]
-        public User User { get; set; }
+        public object User { get; set; }
 
+        [JsonProperty("vote")]
+        public object Vote { get; set; }
 
-
+        [JsonProperty("numberVotes")]
+        public long NumberVotes { get; set; }
     }
 }

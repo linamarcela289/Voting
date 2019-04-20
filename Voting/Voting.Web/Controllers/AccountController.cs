@@ -1,11 +1,5 @@
 ﻿namespace Voting.Web.Controllers
 {
-    using System;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Text;
-    using System.Threading.Tasks;
     using Data.Entities;
     using Helpers;
     using Microsoft.AspNetCore.Identity;
@@ -13,6 +7,12 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
     using Models;
+    using System;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
     using Voting.Web.Data.Repository;
 
     public class AccountController : Controller
@@ -26,15 +26,13 @@
             IUserHelper userHelper,
             IConfiguration configuration,
             ICountryRepository countryRepository,
-            IMailHelper mailHelper
-)
+            IMailHelper mailHelper)
         {
             this.userHelper = userHelper;
             this.configuration = configuration;
             this.countryRepository = countryRepository;
             this.mailHelper = mailHelper;
         }
-
         public IActionResult Login()
         {
             if (this.User.Identity.IsAuthenticated)
@@ -44,7 +42,6 @@
 
             return this.View();
         }
-
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -65,7 +62,6 @@
             this.ModelState.AddModelError(string.Empty, "Failed to login.");
             return this.View(model);
         }
-
         public async Task<IActionResult> Logout()
         {
             await this.userHelper.LogoutAsync();
@@ -78,11 +74,8 @@
                 Countries = this.countryRepository.GetComboCountries(),
                 Cities = this.countryRepository.GetComboCities(0)
             };
-
             return this.View(model);
-
         }
-
         [HttpPost]
         public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
@@ -249,7 +242,7 @@
                     var result = await this.userHelper.ValidatePasswordAsync(
                         user,
                         model.Password);
-                    
+
                     if (result.Succeeded)
                     {
                         var claims = new[]
@@ -280,10 +273,10 @@
             return this.BadRequest();
         }
 
-        public IActionResult NotAuthorized()
-        {
+      public IActionResult NotAuthorized()
+      {
             return this.View();
-        }
+      }
 
         public async Task<JsonResult> GetCitiesAsync(int countryId)
         {
@@ -322,8 +315,8 @@
             }
 
             return this.View(model);
-        
-    }
+
+        }
 
         public async Task<IActionResult> Index()
         {
@@ -437,8 +430,6 @@
 
             return View();
         }
-
-
     }
 }
 
