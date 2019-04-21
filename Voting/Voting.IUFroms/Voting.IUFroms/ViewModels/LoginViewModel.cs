@@ -1,7 +1,9 @@
 ﻿namespace Voting.IUFroms.ViewModels
 {
     using GalaSoft.MvvmLight.Command;
+    using Newtonsoft.Json;
     using System.Windows.Input;
+    using Voting.Common.Helpers;
     using Voting.Common.Models;
     using Voting.Common.Service;
     using Voting.IUFroms.Views;
@@ -12,6 +14,7 @@
         private bool isRunning;
         private bool isEnabled;
         private readonly ApiService apiService;
+        public bool IsRemember { get; set; }
 
         public bool IsRunning
         {
@@ -28,13 +31,22 @@
 
         public string Password { get; set; }
         public ICommand LoginCommand => new RelayCommand(this.Login);
+        public ICommand RegisterCommand => new RelayCommand(this.Register);
+
+        private async void Register()
+        {
+            MainViewModel.GetInstance().Register = new RegisterViewModel();
+            await Application.Current.MainPage.Navigation.PushAsync(new RegisterPage());
+        }
+
 
         public LoginViewModel()
         {
             this.apiService = new ApiService();
             this.IsEnabled = true;
-            this.Email = "linagaleano0@gmail.com";
-            this.Password = "123456";
+          //  this.Email = "linagaleano0@gmail.com";
+           // this.Password = "123456";
+            this.IsRemember = true;
         }
         private async void Login()
         {
@@ -94,6 +106,12 @@
             var mainViewModel = MainViewModel.GetInstance();
             mainViewModel.Token = token;
             mainViewModel.Events = new EventsViewModel();
+            mainViewModel.UserEmail = this.Email;
+            mainViewModel.UserPassword = this.Password;
+            Settings.IsRemember = this.IsRemember;
+            Settings.UserEmail = this.Email;
+            Settings.UserPassword = this.Password;
+            Settings.Token = JsonConvert.SerializeObject(token);
             Application.Current.MainPage = new MasterPage();
 
         }

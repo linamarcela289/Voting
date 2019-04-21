@@ -29,12 +29,24 @@
                 	Placeholder="Enter your password..."
                 	Text="{Binding Password}">
                 </Entry>
+                <StackLayout
+	            HorizontalOptions="Center"
+	            Orientation="Horizontal">
+                    <Label
+    	        Text="Rememberme in this device"
+    	        VerticalOptions="Center">
+                    </Label>
+                    <Switch
+    	        IsToggled="{Binding IsRemember}">
+                    </Switch>
+                </StackLayout>
+
                 <ActivityIndicator
                 	IsRunning="{Binding IsRunning}"
                 	VerticalOptions="CenterAndExpand">
                 </ActivityIndicator>
                 <Button
-                	BackgroundColor="Teal"
+                	BackgroundColor="#4DB6AC"
                 	BorderRadius="23"
                 	Command="{Binding LoginCommand}"
                 	HeightRequest="46"

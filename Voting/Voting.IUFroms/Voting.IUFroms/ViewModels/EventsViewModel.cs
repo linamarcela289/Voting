@@ -7,6 +7,7 @@ namespace Voting.IUFroms.ViewModels
     using GalaSoft.MvvmLight.Command;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Windows.Input;
     using Xamarin.Forms;
 
@@ -55,8 +56,9 @@ namespace Voting.IUFroms.ViewModels
                 this.IsRefreshing = false;
                 return;
             }
-            var myevents = (List<Events>)response.Result;
-            this.Events = new ObservableCollection<Events>(myevents);
+            var myEvents = (List<Events>)response.Result;
+            this.Events = new ObservableCollection<Events>(myEvents.OrderBy(p => p.Name));
+            //  this.Events = new ObservableCollection<Events>(myevents);
             this.IsRefreshing = false;
         }
     }

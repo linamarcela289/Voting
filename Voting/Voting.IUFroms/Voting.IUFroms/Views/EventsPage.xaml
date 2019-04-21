@@ -34,7 +34,7 @@
                                     	FontAttributes="Bold"
                                     	FontSize="Medium"
                                     	Text="{Binding Name}"
-                                    	TextColor="Black">
+                                    	TextColor="#4DB6AC">
                                     </Label>
                                     <Label
                                     	FontAttributes="Bold"
