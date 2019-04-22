@@ -17,6 +17,5 @@ namespace Voting.Common.Models
 
         [JsonProperty("numberCities")]
         public int NumberCities { get; set; }
-
     }
 }

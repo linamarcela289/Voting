@@ -5,6 +5,5 @@
     public class Vote: IEntity
     {
         public int Id { get; set; }
-
     }
 }

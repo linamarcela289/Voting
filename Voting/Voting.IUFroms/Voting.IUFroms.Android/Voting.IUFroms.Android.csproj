@@ -41,6 +41,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <MandroidI18n />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -95,7 +96,6 @@
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-xxhdpi\" />
     <Folder Include="Resources\drawable-xxxhdpi\" />
-    <Folder Include="Resources\Img\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Voting.IUFroms\Voting.IUFroms.csproj">
@@ -122,10 +122,10 @@
     <AndroidResource Include="Resources\drawable\Votacion.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\urna.png" />
+    <AndroidResource Include="Resources\drawable\ic_chevron_right.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\ic_add_to_photos.png" />
+    <AndroidResource Include="Resources\drawable\ic_arrow_right.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

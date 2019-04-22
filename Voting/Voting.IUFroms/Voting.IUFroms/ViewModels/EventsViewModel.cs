@@ -15,8 +15,13 @@ namespace Voting.IUFroms.ViewModels
     public class EventsViewModel : BaseViewModel
     {
         private readonly ApiService apiService;
+
+        // private ObservableCollection<EventItemViewModel> events;
         private ObservableCollection<Events> events;
         private bool isRefreshing;
+
+
+        //  public ObservableCollection<EventItemViewModel> Events
         public ObservableCollection<Events> Events
         {
             get => this.events;
@@ -56,9 +61,8 @@ namespace Voting.IUFroms.ViewModels
                 this.IsRefreshing = false;
                 return;
             }
-            var myEvents = (List<Events>)response.Result;
-            this.Events = new ObservableCollection<Events>(myEvents.OrderBy(p => p.Name));
-            //  this.Events = new ObservableCollection<Events>(myevents);
+            var myevents = (List<Events>)response.Result;
+            this.Events = new ObservableCollection<Events>(myevents);
             this.IsRefreshing = false;
         }
     }

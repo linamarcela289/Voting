@@ -1,21 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Voting.IUFroms.Views.AddEventsPage">
+         	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+         	x:Class="Voting.IUFroms.Views.CandidatePage"
+         	BindingContext="{Binding Main, Source={StaticResource Locator}}"
+         	Title="Edit Product">
     <ContentPage.Content>
         <ScrollView
-        	BindingContext="{Binding AddEvents}">
+        	BindingContext="{Binding LoadEventWithCandidates}">
             <StackLayout
             	Padding="10">
-               <!-- <Image
+                <Image
                 	HeightRequest="150"
-                	Source="{Binding Image}">
+                	Source="{Binding Product.ImageFullPath}">
                 </Image>
                 <Label
                 	FontSize="Micro"
                 	HorizontalOptions="Center"
                 	Text="Tap the image to change it...">
-                </Label>-->
+                </Label>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -30,8 +32,8 @@
                     <Entry
                     	Grid.Column="1"
                     	Grid.Row="0"
-                    	Placeholder="Event name..."
-                    	Text="{Binding Name}">
+                    	Placeholder="Product name..."
+                    	Text="{Binding Product.Name}">
                     </Entry>
                     <Label
                     	Grid.Column="0"
@@ -43,25 +45,38 @@
                     	Grid.Column="1"
                     	Grid.Row="1"
                     	Keyboard="Numeric"
-                    	Placeholder="Description..."
-                    	Text="{Binding Description}">
+                    	Placeholder="Product price..."
+                    	Text="{Binding Product.Price}">
                     </Entry>
                 </Grid>
                 <ActivityIndicator
                 	IsRunning="{Binding IsRunning}"
                 	VerticalOptions="CenterAndExpand">
                 </ActivityIndicator>
-                <Button
-                	BackgroundColor="Navy"
-                	BorderRadius="23"
-                	Command="{Binding SaveCommand}"
-                	HeightRequest="46"
-                	IsEnabled="{Binding IsEnabled}"
-                	Text="Save"
-                	TextColor="White">
-                </Button>
+                <StackLayout
+                	Orientation="Horizontal">
+                    <Button
+                    	BackgroundColor="Navy"
+                    	BorderRadius="23"
+                    	Command="{Binding SaveCommand}"
+                    	HeightRequest="46"
+                    	HorizontalOptions="FillAndExpand"
+                    	IsEnabled="{Binding IsEnabled}"
+                    	Text="Save"
+                    	TextColor="White">
+                    </Button>
+                    <Button
+                    	BackgroundColor="Red"
+                    	BorderRadius="23"
+                    	Command="{Binding DeleteCommand}"
+                    	HeightRequest="46"
+                    	HorizontalOptions="FillAndExpand"
+                    	IsEnabled="{Binding IsEnabled}"
+                    	Text="Delete"
+                    	TextColor="White">
+                    </Button>
+                </StackLayout>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
-
 </ContentPage>

@@ -2,6 +2,8 @@
 {
     using Newtonsoft.Json;
     using System;
+    using System.Collections.Generic;
+    using Voting.Common.Models;
 
     public partial class Events
     {
@@ -22,6 +24,12 @@
 
         [JsonProperty("user")]
         public User User { get; set; }
+
+         [JsonProperty("candidates")]
+        public List<Candidate> Candidates { get; set; }
+
+        [JsonProperty("numberCandidates")]
+        public int NumberCandidates { get; set; }
 
     }
 }

@@ -81,6 +81,7 @@
         }
 
         [HttpDelete("{id}")]
+
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
             if (!ModelState.IsValid)

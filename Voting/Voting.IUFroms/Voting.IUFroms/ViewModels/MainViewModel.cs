@@ -16,13 +16,13 @@ namespace Voting.IUFroms.ViewModels
         private static MainViewModel instance;
         public LoginViewModel Login { get; set; }
 
-        public AddEventsViewModel AddEvents { get; set; }
-
         public EventsViewModel Events { get; set; }
 
         public TokenResponse Token { get; set; }
 
         public RegisterViewModel Register { get; set; }
+
+        public CandidateViewModel Candidate { get; set; }
 
         public string UserEmail { get; set; }
 
@@ -31,21 +31,7 @@ namespace Voting.IUFroms.ViewModels
 
         public ObservableCollection<MenuItemViewModel> Menus { get; set; }
 
-        public ICommand AddEventsCommand { get { return new RelayCommand(this.GoAddEvents); } }
-
-        private async void GoAddEvents()
-        {
-            this.AddEvents = new AddEventsViewModel();
-            await App.Navigator.PushAsync(new AddEventsPage());
-        }
-
-        public MainViewModel()
-        {
-            instance = this;
-            //this.Login = new LoginViewModel();
-            this.LoadMenus();
-
-        }
+  
         public static MainViewModel GetInstance()
         {
             if (instance == null)
@@ -54,6 +40,12 @@ namespace Voting.IUFroms.ViewModels
             }
 
             return instance;
+        }
+        public MainViewModel()
+        {
+            instance = this;
+            this.LoadMenus();
+
         }
         private void LoadMenus()
         {

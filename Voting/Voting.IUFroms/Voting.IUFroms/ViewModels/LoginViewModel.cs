@@ -33,11 +33,7 @@
         public ICommand LoginCommand => new RelayCommand(this.Login);
         public ICommand RegisterCommand => new RelayCommand(this.Register);
 
-        private async void Register()
-        {
-            MainViewModel.GetInstance().Register = new RegisterViewModel();
-            await Application.Current.MainPage.Navigation.PushAsync(new RegisterPage());
-        }
+      
 
 
         public LoginViewModel()
@@ -114,6 +110,11 @@
             Settings.Token = JsonConvert.SerializeObject(token);
             Application.Current.MainPage = new MasterPage();
 
+        }
+        private async void Register()
+        {
+            MainViewModel.GetInstance().Register = new RegisterViewModel();
+            await Application.Current.MainPage.Navigation.PushAsync(new RegisterPage());
         }
     }
 }
