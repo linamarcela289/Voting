@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:local="http://schemas.android.com/apk/res-auto"
+	android:paddingTop="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"    
+    android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<MvxListView
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	local:MvxBind="ItemsSource Events"
+    	local:MvxItemTemplate="@layout/eventsrow"/>
+</LinearLayout>
