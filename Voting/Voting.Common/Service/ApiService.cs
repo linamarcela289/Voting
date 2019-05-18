@@ -10,7 +10,7 @@
     using Voting.Common.Model;
     using Voting.Common.Models;
 
-    public class ApiService
+    public class ApiService : IApiService
     {
         public async Task<Response> GetListAsync<T>(
             string urlBase,
