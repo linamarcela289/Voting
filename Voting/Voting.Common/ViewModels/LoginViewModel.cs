@@ -19,6 +19,17 @@
         private readonly IDialogService dialogService;
         private readonly IMvxNavigationService navigationService;
         private bool isLoading;
+        private MvxCommand registerCommand;
+
+        public ICommand RegisterCommand
+        {
+            get
+            {
+                this.registerCommand = this.registerCommand ?? new MvxCommand(this.DoRegisterCommand);
+                return this.registerCommand;
+            }
+        }
+
 
         public bool IsLoading
         {
@@ -59,6 +70,11 @@
             this.Email = "linagaleano0@gmail.com";
             this.Password = "123456";
             this.IsLoading = false;
+        }
+
+        private async void DoRegisterCommand()
+        {
+            await this.navigationService.Navigate<RegisterViewModel>();
         }
 
         private async void DoLoginCommand()

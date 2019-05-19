@@ -11,6 +11,6 @@
 	<MvxListView
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
-    	local:MvxBind="ItemsSource Events"
+    	local:MvxBind="ItemsSource Events; ItemClick ItemClickCommand;"
     	local:MvxItemTemplate="@layout/eventsrow"/>
 </LinearLayout>
