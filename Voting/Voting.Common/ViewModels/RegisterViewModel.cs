@@ -137,7 +137,7 @@
         private async void LoadCountries()
         {
             var response = await this.apiService.GetListAsync<Country>(
-                "https://systemvotingitm.azurewebsites.net",
+                "https://votingweb20190520011414.azurewebsites.net",
                 "/api",
                 "/Countries");
 
@@ -184,7 +184,7 @@
             };
 
             var response = await this.apiService.RegisterUserAsync(
-                "https://systemvotingitm.azurewebsites.net",
+                "https://votingweb20190520011414.azurewebsites.net",
                 "/api",
                 "/Account",
                 request);

@@ -13,11 +13,13 @@ namespace Voting.Web.Data
         private readonly DataContext context;
         private readonly IUserHelper userHelper;
         private readonly DateTime date;
+        private readonly DateTime dateUser;
         public SeedDb(DataContext context, IUserHelper userHelper)
         {
             this.context = context;
             this.userHelper = userHelper;
             this.date = DateTime.Now;
+            this.dateUser = DateTime.Now;
         }
         public async Task SeedAsync()
         {
@@ -30,7 +32,7 @@ namespace Voting.Web.Data
             
             var user = await this.CheckUserAsync(
                 "linagaleano0@gmail.com", "Lina", "Galeano",
-                "Admin", "Desarrollo", 3, 2);
+                "Admin", "Desarrollo", 3, 2, dateUser);
             if (!this.context.Events.Any())
             {
                 this.AddEvent(
@@ -52,7 +54,7 @@ namespace Voting.Web.Data
             string userName, string firstName,
             string lastName, string role,
             string ocupation, int Stratum,
-            int Gender)
+            int Gender, DateTime Birthdate)
         {
             // Add user
             var user = await this.userHelper.GetUserByEmailAsync(userName);
@@ -62,7 +64,7 @@ namespace Voting.Web.Data
                     userName, firstName,
                     lastName, role,
                     ocupation, Stratum,
-                    Gender);
+                    Gender, Birthdate);
             }
             var isInRole = await this.userHelper.IsUserInRoleAsync(user, role);
             if (!isInRole)
@@ -75,7 +77,7 @@ namespace Voting.Web.Data
             string userName, string firstName,
             string lastName, string role,
             string ocupation, int Stratum,
-            int Gender)
+            int Gender, DateTime Birthdate)
         {
             var user = new User
             {
@@ -86,7 +88,7 @@ namespace Voting.Web.Data
                 Ocupation = ocupation,
                 Stratum = Stratum,
                 Gender = Gender,
-                // Birthdate = Convert.ToDateTime("02/18/1990"),
+                Birthdate = Birthdate,
                 CityId = this.context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                 City = this.context.Countries.FirstOrDefault().Cities.FirstOrDefault()
             };

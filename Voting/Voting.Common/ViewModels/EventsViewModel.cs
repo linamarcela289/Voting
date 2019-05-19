@@ -56,7 +56,7 @@
         {
             var token = JsonConvert.DeserializeObject<TokenResponse>(Settings.Token);
             var response = await this.apiService.GetListAsync<Events>(
-                "https://systemvotingitm.azurewebsites.net",
+                "https://votingweb20190520011414.azurewebsites.net",
                 "/api",
                 "/Events",
                 "bearer",
