@@ -26,7 +26,7 @@
             return this.Ok(this.eventsRepository.GetAllWithUsers());
         }
         [HttpPost]
-        public async Task<IActionResult> PostProduct([FromBody] Common.Model.Events events)
+        public async Task<IActionResult> PostProduct([FromBody]  Events events)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +53,7 @@
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct([FromRoute] int id, [FromBody] Common.Model.Events events)
+        public async Task<IActionResult> PutProduct([FromRoute] int id, [FromBody] Events events)
         {
             if (!ModelState.IsValid)
             {
